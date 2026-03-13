@@ -4,23 +4,13 @@ import { getFirestore, Firestore } from 'firebase/firestore';
 
 // Firebase configuration for JN Medical Suppliers
 const firebaseConfig = {
-  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY || '',
-  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN || '',
-  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || '',
-  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET || '',
-  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID || '',
-  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID || '',
-  measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID || '',
-};
-
-// Check if Firebase config is valid
-const isFirebaseConfigValid = () => {
-  return !!(
-    firebaseConfig.apiKey &&
-    firebaseConfig.authDomain &&
-    firebaseConfig.projectId &&
-    firebaseConfig.appId
-  );
+  apiKey: "AIzaSyBB7f5nUzoZqZgW3Bf9rkg7CTqd8R0kczQ",
+  authDomain: "jn-medical-3f664.firebaseapp.com",
+  projectId: "jn-medical-3f664",
+  storageBucket: "jn-medical-3f664.firebasestorage.app",
+  messagingSenderId: "444704639973",
+  appId: "1:444704639973:web:566b8fc92bfcc0a6ebbd0c",
+  measurementId: "G-86Z0FKNEKF"
 };
 
 // Singleton instances
@@ -34,11 +24,6 @@ const isBrowser = typeof window !== 'undefined';
 // Get or initialize Firebase App
 function getFirebaseApp(): FirebaseApp {
   if (!app) {
-    if (!isFirebaseConfigValid()) {
-      console.error('Firebase configuration is missing or invalid. Please check your environment variables.');
-      throw new Error('Firebase configuration is missing. Please set NEXT_PUBLIC_FIREBASE_* environment variables.');
-    }
-    
     if (getApps().length === 0) {
       app = initializeApp(firebaseConfig);
     } else {
@@ -51,15 +36,10 @@ function getFirebaseApp(): FirebaseApp {
 // Get or initialize Firebase Auth
 export function getFirebaseAuth(): Auth {
   if (!auth && isBrowser) {
-    try {
-      const firebaseApp = getFirebaseApp();
-      auth = getAuth(firebaseApp);
-      // Set persistence to local (persists across browser sessions)
-      setPersistence(auth, browserLocalPersistence).catch(console.error);
-    } catch (error) {
-      console.error('Failed to initialize Firebase Auth:', error);
-      throw error;
-    }
+    const firebaseApp = getFirebaseApp();
+    auth = getAuth(firebaseApp);
+    // Set persistence to local (persists across browser sessions)
+    setPersistence(auth, browserLocalPersistence).catch(console.error);
   }
   return auth!;
 }
@@ -67,20 +47,10 @@ export function getFirebaseAuth(): Auth {
 // Get or initialize Firestore
 export function getFirebaseDb(): Firestore {
   if (!db) {
-    try {
-      const firebaseApp = getFirebaseApp();
-      db = getFirestore(firebaseApp);
-    } catch (error) {
-      console.error('Failed to initialize Firestore:', error);
-      throw error;
-    }
+    const firebaseApp = getFirebaseApp();
+    db = getFirestore(firebaseApp);
   }
   return db;
-}
-
-// Check if Firebase is configured
-export function isFirebaseConfigured(): boolean {
-  return isFirebaseConfigValid();
 }
 
 // Export for backward compatibility
@@ -88,12 +58,8 @@ export { app, auth, db };
 export default getFirebaseApp;
 
 // Initialize on client side
-if (isBrowser && isFirebaseConfigValid()) {
-  try {
-    getFirebaseApp();
-    getFirebaseAuth();
-    getFirebaseDb();
-  } catch (error) {
-    console.error('Failed to initialize Firebase:', error);
-  }
+if (isBrowser) {
+  getFirebaseApp();
+  getFirebaseAuth();
+  getFirebaseDb();
 }

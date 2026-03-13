@@ -8,7 +8,7 @@ import {
   signOut as firebaseSignOut,
   onAuthStateChanged
 } from 'firebase/auth';
-import { getFirebaseAuth, isFirebaseConfigured } from '@/lib/firebase';
+import { getFirebaseAuth } from '@/lib/firebase';
 import { createUser, getUserByUid, User } from '@/lib/firestore';
 
 interface AuthContextType {
@@ -20,7 +20,6 @@ interface AuthContextType {
   signOut: () => Promise<void>;
   isAdmin: boolean;
   refreshUserData: () => Promise<void>;
-  isConfigured: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -29,7 +28,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<FirebaseUser | null>(null);
   const [userData, setUserData] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-  const [isConfigured, setIsConfigured] = useState(true);
 
   const fetchUserData = async (uid: string) => {
     try {
@@ -42,65 +40,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   useEffect(() => {
-    let unsubscribe: (() => void) | undefined;
-    let mounted = true;
-
-    const initializeAuth = async () => {
-      // Check if Firebase is configured
-      if (!isFirebaseConfigured()) {
-        console.error('Firebase is not configured. Please set environment variables.');
-        if (mounted) {
-          setIsConfigured(false);
-          setLoading(false);
-        }
-        return;
+    const auth = getFirebaseAuth();
+    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+      setUser(firebaseUser);
+      
+      if (firebaseUser) {
+        await fetchUserData(firebaseUser.uid);
+      } else {
+        setUserData(null);
       }
+      
+      setLoading(false);
+    });
 
-      try {
-        const auth = getFirebaseAuth();
-        if (auth) {
-          unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
-            if (!mounted) return;
-            
-            setUser(firebaseUser);
-            
-            if (firebaseUser) {
-              await fetchUserData(firebaseUser.uid);
-            } else {
-              setUserData(null);
-            }
-            
-            setLoading(false);
-          });
-        } else {
-          if (mounted) {
-            setLoading(false);
-          }
-        }
-      } catch (error) {
-        console.error('Firebase initialization error:', error);
-        if (mounted) {
-          setIsConfigured(false);
-          setLoading(false);
-        }
-      }
-    };
-
-    initializeAuth();
-
-    return () => {
-      mounted = false;
-      if (unsubscribe) {
-        unsubscribe();
-      }
-    };
+    return () => unsubscribe();
   }, []);
 
   const signUp = async (email: string, password: string, name: string): Promise<{ success: boolean; error?: string }> => {
-    if (!isFirebaseConfigured()) {
-      return { success: false, error: 'Firebase is not configured. Please contact support.' };
-    }
-
     try {
       const auth = getFirebaseAuth();
       const credential = await createUserWithEmailAndPassword(auth, email, password);
@@ -148,10 +104,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const signIn = async (email: string, password: string): Promise<{ success: boolean; error?: string }> => {
-    if (!isFirebaseConfigured()) {
-      return { success: false, error: 'Firebase is not configured. Please contact support.' };
-    }
-
     try {
       const auth = getFirebaseAuth();
       const credential = await signInWithEmailAndPassword(auth, email, password);
@@ -196,10 +148,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signOut = async () => {
     try {
-      if (isFirebaseConfigured()) {
-        const auth = getFirebaseAuth();
-        await firebaseSignOut(auth);
-      }
+      const auth = getFirebaseAuth();
+      await firebaseSignOut(auth);
       setUser(null);
       setUserData(null);
     } catch (error) {
@@ -224,8 +174,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       signIn, 
       signOut,
       isAdmin,
-      refreshUserData,
-      isConfigured
+      refreshUserData
     }}>
       {children}
     </AuthContext.Provider>

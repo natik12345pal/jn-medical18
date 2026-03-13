@@ -49,7 +49,6 @@ import {
   Search
 } from 'lucide-react';
 import { toast } from 'sonner';
-import { formatPrice } from '@/lib/utils';
 
 const statusOptions: Order['status'][] = ['pending', 'processing', 'shipped', 'delivered', 'cancelled'];
 
@@ -285,7 +284,7 @@ export default function AdminPage() {
               </div>
               <div>
                 <p className="text-sm text-gray-500">Revenue</p>
-                <p className="text-2xl font-bold">{formatPrice(totalRevenue)}</p>
+                <p className="text-2xl font-bold">${totalRevenue.toFixed(2)}</p>
               </div>
             </div>
           </CardContent>
@@ -346,7 +345,7 @@ export default function AdminPage() {
                           </div>
                         </td>
                         <td className="py-3 px-4 font-medium">
-                          {formatPrice(product.price)}
+                          ${product.price.toFixed(2)}
                         </td>
                         <td className="py-3 px-4">
                           <Badge variant={product.stock > 10 ? 'default' : product.stock > 0 ? 'secondary' : 'destructive'}>
@@ -453,7 +452,7 @@ export default function AdminPage() {
                         <div key={index} className="flex items-center gap-3 text-sm">
                           <span className="font-medium">{item.name}</span>
                           <span className="text-gray-500">x{item.quantity}</span>
-                          <span className="ml-auto">{formatPrice(item.price * item.quantity)}</span>
+                          <span className="ml-auto">${(item.price * item.quantity).toFixed(2)}</span>
                         </div>
                       ))}
                     </div>
@@ -462,7 +461,7 @@ export default function AdminPage() {
                         {order.createdAt?.toDate().toLocaleDateString()}
                       </span>
                       <span className="font-bold text-cyan-600">
-                        Total: {formatPrice(order.total)}
+                        Total: ${order.total.toFixed(2)}
                       </span>
                     </div>
                   </div>
@@ -501,14 +500,14 @@ export default function AdminPage() {
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="price">Price (₹)</Label>
+                <Label htmlFor="price">Price ($)</Label>
                 <Input
                   id="price"
                   type="number"
                   step="0.01"
                   value={productForm.price}
                   onChange={(e) => setProductForm({ ...productForm, price: e.target.value })}
-                  placeholder="0"
+                  placeholder="0.00"
                 />
               </div>
               <div className="space-y-2">

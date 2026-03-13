@@ -8,7 +8,6 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Package, Calendar, MapPin, CreditCard, Loader2, ChevronDown, ChevronUp, RefreshCw, ShoppingBag } from 'lucide-react';
-import { formatPrice } from '@/lib/utils';
 
 const statusColors: Record<Order['status'], string> = {
   pending: 'bg-yellow-500',
@@ -193,13 +192,13 @@ export default function OrdersPage() {
                             <p className="font-medium text-gray-900">{item.name}</p>
                             <p className="text-sm text-gray-500">Qty: {item.quantity}</p>
                           </div>
-                          <p className="font-medium">{formatPrice(item.price * item.quantity)}</p>
+                          <p className="font-medium">${(item.price * item.quantity).toFixed(2)}</p>
                         </div>
                       ))}
                     </div>
                     <div className="border-t mt-4 pt-4 flex justify-between items-center">
                       <span className="text-gray-600">Total</span>
-                      <span className="text-xl font-bold text-cyan-600">{formatPrice(order.total || 0)}</span>
+                      <span className="text-xl font-bold text-cyan-600">${order.total?.toFixed(2) || '0.00'}</span>
                     </div>
                   </div>
                   

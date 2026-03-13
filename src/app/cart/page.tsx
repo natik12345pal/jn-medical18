@@ -9,7 +9,6 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Trash2, Plus, Minus, ShoppingBag, ArrowRight } from 'lucide-react';
-import { formatPrice } from '@/lib/utils';
 
 export default function CartPage() {
   const { items, removeItem, updateQuantity, getTotal, clearCart } = useCartStore();
@@ -70,7 +69,7 @@ export default function CartPage() {
                       </h3>
                     </Link>
                     <p className="text-lg font-bold text-cyan-600 mt-1">
-                      {formatPrice(item.price)}
+                      ${item.price.toFixed(2)}
                     </p>
                     <div className="flex items-center gap-4 mt-2">
                       <div className="flex items-center border rounded-lg">
@@ -110,7 +109,7 @@ export default function CartPage() {
                   </div>
                   <div className="text-right">
                     <p className="font-bold text-gray-900">
-                      {formatPrice(item.price * item.quantity)}
+                      ${(item.price * item.quantity).toFixed(2)}
                     </p>
                   </div>
                 </div>
@@ -127,7 +126,7 @@ export default function CartPage() {
               <div className="space-y-3 text-sm">
                 <div className="flex justify-between">
                   <span className="text-gray-600">Subtotal ({items.reduce((a, i) => a + i.quantity, 0)} items)</span>
-                  <span>{formatPrice(getTotal())}</span>
+                  <span>${getTotal().toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-600">Delivery</span>
@@ -136,7 +135,7 @@ export default function CartPage() {
                 <hr />
                 <div className="flex justify-between text-lg font-bold">
                   <span>Total</span>
-                  <span>{formatPrice(getTotal())}</span>
+                  <span>${getTotal().toFixed(2)}</span>
                 </div>
               </div>
             </CardContent>

@@ -14,7 +14,6 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Loader2, ShoppingBag, MapPin, CreditCard, CheckCircle, ChevronRight, ChevronLeft, Banknote, Truck, User } from 'lucide-react';
 import { toast } from 'sonner';
-import { formatPrice } from '@/lib/utils';
 
 type CheckoutStep = 'delivery' | 'payment' | 'review';
 
@@ -539,10 +538,10 @@ export default function CheckoutPage() {
                         </div>
                         <div className="flex-1 min-w-0">
                           <p className="font-medium truncate">{item.name}</p>
-                          <p className="text-sm text-gray-500">Qty: {item.quantity} × {formatPrice(item.price)}</p>
+                          <p className="text-sm text-gray-500">Qty: {item.quantity} × ${item.price.toFixed(2)}</p>
                         </div>
                         <p className="font-semibold">
-                          {formatPrice(item.price * item.quantity)}
+                          ${(item.price * item.quantity).toFixed(2)}
                         </p>
                       </div>
                     ))}
@@ -609,7 +608,7 @@ export default function CheckoutPage() {
                       <p className="text-xs text-gray-500">Qty: {item.quantity}</p>
                     </div>
                     <p className="text-sm font-medium">
-                      {formatPrice(item.price * item.quantity)}
+                      ${(item.price * item.quantity).toFixed(2)}
                     </p>
                   </div>
                 ))}
@@ -620,7 +619,7 @@ export default function CheckoutPage() {
               <div className="space-y-3 text-sm">
                 <div className="flex justify-between">
                   <span className="text-gray-600">Subtotal</span>
-                  <span>{formatPrice(getTotal())}</span>
+                  <span>${getTotal().toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-600">Delivery</span>
@@ -629,7 +628,7 @@ export default function CheckoutPage() {
                 <hr />
                 <div className="flex justify-between text-lg font-bold">
                   <span>Total</span>
-                  <span>{formatPrice(getTotal())}</span>
+                  <span>${getTotal().toFixed(2)}</span>
                 </div>
               </div>
             </CardContent>

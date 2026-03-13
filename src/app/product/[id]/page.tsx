@@ -11,7 +11,6 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { ShoppingCart, Package, ArrowLeft, Check, Truck, Shield } from 'lucide-react';
 import { toast } from 'sonner';
-import { formatPrice } from '@/lib/utils';
 
 export default function ProductDetailPage() {
   const params = useParams();
@@ -126,7 +125,7 @@ export default function ProductDetailPage() {
         <div className="space-y-6">
           <div>
             <h1 className="text-3xl font-bold text-gray-900 mb-2">{product.name}</h1>
-            <p className="text-3xl font-bold text-cyan-600">{formatPrice(product.price)}</p>
+            <p className="text-3xl font-bold text-cyan-600">${product.price.toFixed(2)}</p>
           </div>
 
           <div className="flex items-center gap-4">

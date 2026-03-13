@@ -1,7 +1,6 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
   typescript: {
     ignoreBuildErrors: true,
   },
@@ -9,12 +8,12 @@ const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
       {
-        protocol: 'https',
-        hostname: 'i.postimg.cc',
+        protocol: "https",
+        hostname: "i.postimg.cc",
       },
       {
-        protocol: 'https',
-        hostname: 'postimg.cc',
+        protocol: "https",
+        hostname: "postimg.cc",
       },
     ],
   },

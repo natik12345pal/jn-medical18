@@ -1,13 +1,8 @@
-'use client';
-
 import Link from 'next/link';
 import Image from 'next/image';
 import { Facebook, Instagram, Twitter, Mail, Phone, MapPin } from 'lucide-react';
-import { useAuth } from '@/contexts/AuthContext';
 
 export function Footer() {
-  const { user, loading } = useAuth();
-
   return (
     <footer className="bg-gray-900 text-gray-300 mt-auto">
       <div className="container mx-auto px-4 py-12">
@@ -59,36 +54,11 @@ export function Footer() {
                   Cart
                 </Link>
               </li>
-              {/* Show Sign In / Sign Up when NOT logged in */}
-              {!loading && !user && (
-                <>
-                  <li>
-                    <Link href="/login" className="hover:text-cyan-400 transition-colors">
-                      Sign In
-                    </Link>
-                  </li>
-                  <li>
-                    <Link href="/signup" className="hover:text-cyan-400 transition-colors">
-                      Sign Up
-                    </Link>
-                  </li>
-                </>
-              )}
-              {/* Show Profile / Orders when logged in */}
-              {!loading && user && (
-                <>
-                  <li>
-                    <Link href="/profile" className="hover:text-cyan-400 transition-colors">
-                      My Profile
-                    </Link>
-                  </li>
-                  <li>
-                    <Link href="/orders" className="hover:text-cyan-400 transition-colors">
-                      My Orders
-                    </Link>
-                  </li>
-                </>
-              )}
+              <li>
+                <Link href="/login" className="hover:text-cyan-400 transition-colors">
+                  Sign In
+                </Link>
+              </li>
             </ul>
           </div>
 
